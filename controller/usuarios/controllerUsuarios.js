@@ -197,6 +197,39 @@ try {
 }
 }
 
+const loginUsuario = async function(usuario) {
+    if (
+       usuario.email === "" ||   usuario.email === undefined || usuario.email === null  ||  usuario.email >100  ||
+       usuario.senha === "" ||   usuario.senha === undefined || usuario.senha === null  ||  usuario.email >100
+    ) {
+        return message.ERROR_REQUIRED_FIELD //400
+        
+    } else {
+        let dadosUsuarioLogado = {}
+
+        let resultUsuario = await usuariosDAO.selecByIdUsuario(parseInt(id))
+
+        if(resultUsuario!= false || typeof(resultUsuario) == 'object'){
+
+            if(resultUsuario.length > 0){
+
+                dadosUsuario.status = true
+                dadosUsuario.status_code = 200
+                dadosUsuario.user = resultUsuario
+
+                return dadosUsuario
+            }else{
+                return message.ERROR_NOT_FOUND //404
+            }
+      
+        }else{
+            return message.ERROR_INTERNAL_SERVER_MODEL //500
+        }
+        
+    }
+    
+}
+
 module.exports = {
     inserirUsuario,
     atualizarUsuario,

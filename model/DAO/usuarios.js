@@ -124,6 +124,26 @@ const selecByIdUsuario = async function(id){
 
 }
 
+// função para buscar um usuario pelo id
+const selectLoginEmail = async function(id){
+    
+    try {
+        let sql = `select * from tbl_usuarios where email = ${email} and where senha = ${senha}`
+
+        let result =  await prisma.$queryRawUnsafe(sql)
+
+        if (result) {
+            return result
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+
+}
+
+
 
 module.exports = {
     insertUsuario,
