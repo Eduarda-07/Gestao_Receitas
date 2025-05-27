@@ -20,7 +20,7 @@ const selectEmailUsuario = async function (email) {
        
 
           if (result) {
-            return true
+            return result
         } else {
             return false
         }
