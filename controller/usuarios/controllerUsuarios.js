@@ -23,8 +23,8 @@ const inserirUsuario = async function(usuario, contentType){
             if(  
                  usuario.nome             == ""  || usuario.nome             == undefined  || usuario.nome             == null  || usuario.nome.length   > 100  ||
                  usuario.email            == ""  || usuario.email            == undefined  || usuario.email            == null  || usuario.email.length   > 100  ||
-                 usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || usuario.senha.length  > 100  ||
-                 usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 100  
+                 usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || 
+                 usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  
                  
             ){
 
@@ -82,43 +82,49 @@ const atualizarUsuario = async function(id, usuario, contentType){
                 id                       == ""  ||  id                      == undefined  || id                       == null  || isNaN(id) || id <= 0         || 
                 usuario.nome             == ""  || usuario.nome             == undefined  || usuario.nome             == null  || usuario.nome.length   > 100  ||
                 usuario.email            == ""  || usuario.email            == undefined  || usuario.email            == null  || usuario.email.length   > 100  ||
-                usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || usuario.senha.length  > 100  ||
-                usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 100  
+                usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || 
+                usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || 
+                usuario.foto_perfil !== undefined && usuario.foto_perfil !== null && usuario.foto_perfil.length > 200
             ) {
+                console.log("Erro ao gerar campos nao preenchidos")
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos 
+               
             } else {
-                   if (usuario.senha && usuario.senha.length > 0) {
-                    try {
-                        usuario.senha = await bcrypt.hash(usuario.senha, 10)
-                    } catch (hashError) {
-                        console.error("Erro ao gerar hash da nova senha:", hashError)
-                        return message.ERROR_INTERNAL_SERVER_CONTROLLER
-                    }
-                }
 
-                  if (usuario.palavra_chave && usuario.palavra_chave.length > 0) {
-                    try {
-                        usuario.palavra_chave = await bcrypt.hash(usuario.palavra_chave, 10)
-                    } catch (hashError) {
-                        console.error("Erro ao gerar hash da nova palavra chave:", hashError)
-                        return message.ERROR_INTERNAL_SERVER_CONTROLLER
-                    }
-                }
                 // verificando se o id existe no banco
-                let result= await usuariosDAO.selecByIdUsuario(parseInt(id))
+                let result = await usuariosDAO.selecByIdUsuario(parseInt(id))
+                console.log("Erro ao verificar id")
 
                 if(result != false || typeof(result) == "object"){
                     if (result.length > 0) {
                         //adicionando id no json com os dados 
                         usuario.id = parseInt(id)
-
-                        let resultUsuario = await usuariosDAO.updateUsuario(usuario)
-
-                        if (resultUsuario) {
-                            return message.SUCCESS_UPDATED_ITEM //200 - usuario atualizado
-                        } else {
-                            return message.ERROR_INTERNAL_SERVER_MODEL //500 
+                        if (usuario.senha && usuario.senha.length > 0) {
+                            try {
+                                usuario.senha = await bcrypt.hash(usuario.senha, 10)
+                                
+                            } catch (hashError) {
+                                console.error("Erro ao gerar hash da nova senha:", hashError)
+                                return message.ERROR_INTERNAL_SERVER_CONTROLLER
+                            }
                         }
+                          if (usuario.palavra_chave && usuario.palavra_chave.length > 0) {
+                            try {
+                                usuario.palavra_chave = await bcrypt.hash(usuario.palavra_chave, 10)
+                                
+                            } catch (hashError) {
+                                console.error("Erro ao gerar hash da nova palavra chave:", hashError)
+                                return message.ERROR_INTERNAL_SERVER_CONTROLLER
+                            }
+                        }
+                            let resultUsuario = await usuariosDAO.updateUsuario(usuario)
+
+                            if (resultUsuario) {
+                                return message.SUCCESS_UPDATED_ITEM //200 - usuario atualizado
+                            }else {
+                                return message.ERROR_INTERNAL_SERVER_MODEL //500 
+                            } 
+                        
                     } else {
                         return message.ERROR_NOT_FOUND
                     }

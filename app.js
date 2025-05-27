@@ -25,12 +25,13 @@
  ***********************************************************************************************/
 
 
-require('dotenv').config();
+// require('dotenv').config();
 
 // import das bibliotecas para criar api
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+
 
 
 
@@ -122,9 +123,9 @@ app.delete('/v1/controle-receitas/usuario/:id', cors(), async function (request,
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.post('/v1/controle-receitas/usuario/login', cors(), async function (request, response) {
+app.post('/v1/controle-receitas/usuario/login', cors(),bodyParserJSON, async function (request, response) {
 
-     console.log("Conteúdo de request.body:", request.body)
+    //  console.log("Conteúdo de request.body:", request.body)
     let dadosLogin = request.body
 
     let resultUsuario = await controllerLogin.loginUsuario(dadosLogin)

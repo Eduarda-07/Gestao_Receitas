@@ -15,7 +15,9 @@ const prisma = new PrismaClient()
 const selectEmailUsuario = async function (email) {
     try {
         let sql = `SELECT * FROM tbl_usuarios WHERE email = '${email}'`
-        let result = await prisma.executeRawUnsafe(sql)
+      
+        let result = await prisma.$queryRawUnsafe(sql)
+       
 
           if (result) {
             return true
@@ -23,6 +25,7 @@ const selectEmailUsuario = async function (email) {
             return false
         }
     } catch (error) {
+        
         return false;
     }
 }

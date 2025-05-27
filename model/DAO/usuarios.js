@@ -49,7 +49,8 @@ const updateUsuario = async function(usuario){
         let sql = `update tbl_usuarios set nome           = '${usuario.nome}', 
                                           email           = '${usuario.email}', 
                                           senha           = '${usuario.senha}', 
-                                          palavra_chave   = '${usuario.palavra_chave}'
+                                          palavra_chave   = '${usuario.palavra_chave}',
+                                          foto_perfil   = '${usuario.foto_perfil}'
                                     where id = ${usuario.id}
                                     `
                             
@@ -92,6 +93,7 @@ const selectAllUsuario = async function(){
 
         //executa o scriptSQL no banco de dados e aguarda o retorno dos dados 
         let result = await prisma.$queryRawUnsafe(sql)
+    
 
         if(result)
             return result
