@@ -11,6 +11,9 @@ const message = require('../../modulo/config')
 //import do arquivo DAO para realizar os comando no banco
 const usuariosDAO = require("../../model/DAO/usuarios")
 
+//import da biblioteca para criptografar as senhas
+const bcrypt = require('bcrypt')
+
 // inserir usuario no banco
 const inserirUsuario = async function(usuario, contentType){
     try {
@@ -21,13 +24,38 @@ const inserirUsuario = async function(usuario, contentType){
                  usuario.nome             == ""  || usuario.nome             == undefined  || usuario.nome             == null  || usuario.nome.length   > 100  ||
                  usuario.email            == ""  || usuario.email            == undefined  || usuario.email            == null  || usuario.email.length   > 100  ||
                  usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || usuario.senha.length  > 100  ||
-                 usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 10   ||
-                 usuario.foto_perfil      == undefined ||usuario.foto_perfil      > 200
+                 usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 100  
+                 
             ){
 
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos
                 
             }else {
+                 let hashedSenha
+                try {
+                    
+                    // o numero 10 é um nível de segurança basico
+                    hashedSenha = await bcrypt.hash(usuario.senha, 10)
+                } catch (hashError) {
+                    console.log("Erro ao gerar hash da senha:", hashError)
+                    return message.ERROR_INTERNAL_SERVER_CONTROLLER // Erro no servidor
+                }
+                
+                usuario.senha = hashedSenha
+
+
+                let hashedPalavra
+                try {
+                    
+                    // o numero 10 é um nível de segurança basico
+                    hashedPalavra = await bcrypt.hash(usuario.palavra_chave, 10)
+                } catch (hashError) {
+                    console.log("Erro ao gerar hash da palavra:", hashError)
+                    return message.ERROR_INTERNAL_SERVER_CONTROLLER // Erro no servidor
+                }
+                
+                usuario.palavra_chave = hashedPalavra
+
                 let result= await usuariosDAO.insertUsuario(usuario)
    
                if (result) {
@@ -55,12 +83,27 @@ const atualizarUsuario = async function(id, usuario, contentType){
                 usuario.nome             == ""  || usuario.nome             == undefined  || usuario.nome             == null  || usuario.nome.length   > 100  ||
                 usuario.email            == ""  || usuario.email            == undefined  || usuario.email            == null  || usuario.email.length   > 100  ||
                 usuario.senha            == ""  || usuario.senha            == undefined  || usuario.senha            == null  || usuario.senha.length  > 100  ||
-                usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 10   ||
-                usuario.foto_perfil      == undefined ||usuario.foto_perfil      > 200
+                usuario.palavra_chave    == ""  || usuario.palavra_chave    == undefined  || usuario.palavra_chave    == null  || usuario.palavra_chave.length   > 100  
             ) {
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos 
             } else {
+                   if (usuario.senha && usuario.senha.length > 0) {
+                    try {
+                        usuario.senha = await bcrypt.hash(usuario.senha, 10)
+                    } catch (hashError) {
+                        console.error("Erro ao gerar hash da nova senha:", hashError)
+                        return message.ERROR_INTERNAL_SERVER_CONTROLLER
+                    }
+                }
 
+                  if (usuario.palavra_chave && usuario.palavra_chave.length > 0) {
+                    try {
+                        usuario.palavra_chave = await bcrypt.hash(usuario.palavra_chave, 10)
+                    } catch (hashError) {
+                        console.error("Erro ao gerar hash da nova palavra chave:", hashError)
+                        return message.ERROR_INTERNAL_SERVER_CONTROLLER
+                    }
+                }
                 // verificando se o id existe no banco
                 let result= await usuariosDAO.selecByIdUsuario(parseInt(id))
 
@@ -102,7 +145,7 @@ const excluirUsuario = async function(id){
         } else {
 
             //função para verificar se o id existe no banco de dados
-            let result = await usuariosDAO.deleteUsuario(parseInt(id))
+            let result = await usuariosDAO.selecByIdUsuario(parseInt(id))
 
             if(result != false || typeof(result) == 'object'){
 
@@ -197,38 +240,6 @@ try {
 }
 }
 
-const loginUsuario = async function(usuario) {
-    if (
-       usuario.email === "" ||   usuario.email === undefined || usuario.email === null  ||  usuario.email >100  ||
-       usuario.senha === "" ||   usuario.senha === undefined || usuario.senha === null  ||  usuario.email >100
-    ) {
-        return message.ERROR_REQUIRED_FIELD //400
-        
-    } else {
-        let dadosUsuarioLogado = {}
-
-        let resultUsuario = await usuariosDAO.selecByIdUsuario(parseInt(id))
-
-        if(resultUsuario!= false || typeof(resultUsuario) == 'object'){
-
-            if(resultUsuario.length > 0){
-
-                dadosUsuario.status = true
-                dadosUsuario.status_code = 200
-                dadosUsuario.user = resultUsuario
-
-                return dadosUsuario
-            }else{
-                return message.ERROR_NOT_FOUND //404
-            }
-      
-        }else{
-            return message.ERROR_INTERNAL_SERVER_MODEL //500
-        }
-        
-    }
-    
-}
 
 module.exports = {
     inserirUsuario,

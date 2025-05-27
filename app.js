@@ -6,7 +6,7 @@
  * observação: 
  * 1) para criar a API precisamos instalar -> expres, cors e body-parser
  *      express: npm install express --save
- *      cors: nmp install cors --save
+ *      cors: npm install cors --save
  *      body-parser: nmp install body-parser --save
  * 2) para criar interação com o banco de dados precisamos instalar -> prisma e prisma/client
  *       prisma -> npm install prisma --save (gerencia conexão com o banco)
@@ -19,13 +19,20 @@
  * 
  * Após essa configuração deverá rodar o seguinte comando:
  *  1) npx prisma migrate dev (tomar cuidado: acontece um reset no banco)
+ * 
+ * Para criptografar as senhas e palavras chaves deve-se instalar o bcrypt:
+ *      npm install bcrypt (o import dessa biblioteca deve ser feito na controler de usuários)
  ***********************************************************************************************/
 
+
+require('dotenv').config();
 
 // import das bibliotecas para criar api
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+
+
 
 //manipular o body da requisição para chegar apenas JSON
 const bodyParserJSON = bodyParser.json()
@@ -45,7 +52,9 @@ app.use((request, response, next) => {
 
 
 const controllerUsuarios = require('./controller/usuarios/controllerUsuarios')
+const controllerLogin = require('./controller/login/controllerLogin')
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
  app.post('/v1/controle-receitas/usuario', cors(), bodyParserJSON, async function (request, response){
 
@@ -108,6 +117,20 @@ app.delete('/v1/controle-receitas/usuario/:id', cors(), async function (request,
     response.status(resultUsuario.status_code)
     response.json(resultUsuario)
 
+
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/v1/controle-receitas/usuario/login', cors(), async function (request, response) {
+
+     console.log("Conteúdo de request.body:", request.body)
+    let dadosLogin = request.body
+
+    let resultUsuario = await controllerLogin.loginUsuario(dadosLogin)
+
+    response.status(resultUsuario.status_code)
+    response.json(resultUsuario)
 
 })
 

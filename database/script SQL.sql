@@ -1,3 +1,6 @@
+show databases;
+CREATE database gestaoDeReceitasDS2ab;
+use gestaoDeReceitasDS2ab;
 
 
 CREATE TABLE tbl_usuarios (

@@ -18,15 +18,13 @@ const insertUsuario = async function (usuario){
                     nome,
                     email,
                     senha,
-                    palavra_chave,
-                    foto_perfil
+                    palavra_chave
                 )
                     values(
                         '${usuario.nome}',
                         '${usuario.email}',
                         '${usuario.senha}',
-                        '${usuario.palavra_chave}',
-                        '${usuario.foto_perfil}'
+                        '${usuario.palavra_chave}'
                     )`
 
           // await só funciona com o "async", serve para fazer uma pausa no terminal para aguardar a conexão com o banco de dados
@@ -51,8 +49,7 @@ const updateUsuario = async function(usuario){
         let sql = `update tbl_usuarios set nome           = '${usuario.nome}', 
                                           email           = '${usuario.email}', 
                                           senha           = '${usuario.senha}', 
-                                          palavra_chave   = '${usuario.palavra_chave}', 
-                                          foto_perfil     = '${usuario.foto_perfil}'
+                                          palavra_chave   = '${usuario.palavra_chave}'
                                     where id = ${usuario.id}
                                     `
                             
@@ -65,6 +62,7 @@ const updateUsuario = async function(usuario){
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
