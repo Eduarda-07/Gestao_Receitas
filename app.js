@@ -54,6 +54,7 @@ app.use((request, response, next) => {
 
 const controllerUsuarios = require('./controller/usuarios/controllerUsuarios')
 const controllerLogin = require('./controller/login/controllerLogin')
+const controllerDidiculdade = require('./controller/dificuldade/controllerNivelDificuldade')
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -133,6 +134,64 @@ app.post('/v1/controle-receitas/usuario/login', cors(),bodyParserJSON, async fun
     response.status(resultUsuario.status_code)
     response.json(resultUsuario)
 
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/v1/controle-receitas/nivelDificuldade', cors(), bodyParserJSON, async function (request, response){
+
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe do body da requisição os dados encaminhados
+    let dadosBody = request.body
+    let resultNivelDificuldade = await controllerDidiculdade.inserirNivelDificuldade(dadosBody, contentType)
+
+    response.status(resultNivelDificuldade.status_code)
+    response.json(resultNivelDificuldade)
+})
+
+app.get('/v1/controle-receitas/nivelDificuldade', cors(), async function(request, response) {
+    
+    let resultDificuldade = await controllerDidiculdade.listarNivelDificuldade()
+
+    response.status(resultDificuldade.status_code)
+    response.json(resultDificuldade)
+})
+
+app.get('/v1/controle-receitas/nivelDificuldade/:id', cors(), async function(request, response) {
+    
+    let idDificuldade = request.params.id
+
+    let resultDificuldade = await controllerDidiculdade.buscarNivelDificuldade(idDificuldade)
+
+    response.status(resultDificuldade.status_code)
+    response.json(resultDificuldade)
+})
+
+app.delete('/v1/controle-receitas/nivelDificuldade/:id', cors(), async function (request, response) {
+    
+    let idDificuldade =  request.params.id
+
+    let resultDificuldade = await controllerDidiculdade.excluirNivelDificuldade(idDificuldade)
+
+    response.status(resultDificuldade.status_code)
+    response.json(resultDificuldade)
+})
+
+app.put('/v1/controle-receitas/nivelDificuldade/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let contentType = request.headers['content-type']
+
+    let idDificuldade =  request.params.id
+
+    //recebe os dados da requisição pelo body
+    let dadosBody = request.body
+
+    let resultDificuldade = await controllerDidiculdade.atualizarNivelDificuldade(idDificuldade, dadosBody, contentType)
+
+    response.status(resultDificuldade.status_code)
+    response.json(resultDificuldade)
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
