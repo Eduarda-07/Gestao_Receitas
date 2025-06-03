@@ -56,6 +56,8 @@ const updateNivelDificuldade = async function(dificuldade){
         }
 
     } catch (error) {
+        console.log(error);
+        
         return false
     }
 
@@ -66,7 +68,7 @@ const deleteNivelDifuculdade = async function(id){
     try {
         let sql = `delete from tbl_nivel_dificuldade where id = ${id}`
 
-        let result =  await prisma.$executeRawUnsafe(sql)
+        let result =  await prisma.$queryRawUnsafe(sql)
 
         if (result) {
             return true
@@ -102,7 +104,7 @@ const selectAllNivelDificuldade = async function(){
 const selecByIdNivelDificuldade = async function(id){
     
     try {
-        let sql = `select * from tbl__nivel_dificulde where id = ${id}`
+        let sql = `select * from tbl_nivel_dificuldade where id = ${id}`
 
         let result =  await prisma.$queryRawUnsafe(sql)
 
@@ -112,6 +114,8 @@ const selecByIdNivelDificuldade = async function(id){
             return false
         }
     } catch (error) {
+        console.log(error);
+        
         return false
     }
 

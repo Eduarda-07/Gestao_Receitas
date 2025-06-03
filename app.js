@@ -54,7 +54,9 @@ app.use((request, response, next) => {
 
 const controllerUsuarios = require('./controller/usuarios/controllerUsuarios')
 const controllerLogin = require('./controller/login/controllerLogin')
-const controllerDidiculdade = require('./controller/dificuldade/controllerNivelDificuldade')
+const controllerNivelDificuldade = require('./controller/dificuldade/controllerNivelDificuldade')
+const controllerCategoria = require('./controller/categoria/controllerCategoria')
+const controllerReceita = require('./controller/receitas/controllerReceitas')
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,15 +147,15 @@ app.post('/v1/controle-receitas/nivelDificuldade', cors(), bodyParserJSON, async
 
     //recebe do body da requisição os dados encaminhados
     let dadosBody = request.body
-    let resultNivelDificuldade = await controllerDidiculdade.inserirNivelDificuldade(dadosBody, contentType)
+    let resultCategoria = await controllerNivelDificuldade.inserirNivelDificuldade(dadosBody, contentType)
 
-    response.status(resultNivelDificuldade.status_code)
-    response.json(resultNivelDificuldade)
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
 })
 
 app.get('/v1/controle-receitas/nivelDificuldade', cors(), async function(request, response) {
     
-    let resultDificuldade = await controllerDidiculdade.listarNivelDificuldade()
+    let resultDificuldade = await controllerNivelDificuldade.listarNivelDificuldade()
 
     response.status(resultDificuldade.status_code)
     response.json(resultDificuldade)
@@ -163,7 +165,7 @@ app.get('/v1/controle-receitas/nivelDificuldade/:id', cors(), async function(req
     
     let idDificuldade = request.params.id
 
-    let resultDificuldade = await controllerDidiculdade.buscarNivelDificuldade(idDificuldade)
+    let resultDificuldade = await controllerNivelDificuldade.buscarNivelDificuldade(idDificuldade)
 
     response.status(resultDificuldade.status_code)
     response.json(resultDificuldade)
@@ -173,7 +175,7 @@ app.delete('/v1/controle-receitas/nivelDificuldade/:id', cors(), async function 
     
     let idDificuldade =  request.params.id
 
-    let resultDificuldade = await controllerDidiculdade.excluirNivelDificuldade(idDificuldade)
+    let resultDificuldade = await controllerNivelDificuldade.excluirNivelDificuldade(idDificuldade)
 
     response.status(resultDificuldade.status_code)
     response.json(resultDificuldade)
@@ -188,13 +190,138 @@ app.put('/v1/controle-receitas/nivelDificuldade/:id', cors(), bodyParserJSON, as
     //recebe os dados da requisição pelo body
     let dadosBody = request.body
 
-    let resultDificuldade = await controllerDidiculdade.atualizarNivelDificuldade(idDificuldade, dadosBody, contentType)
+    let resultDificuldade = await controllerNivelDificuldade.atualizarNivelDificuldade(idDificuldade, dadosBody, contentType)
 
     response.status(resultDificuldade.status_code)
     response.json(resultDificuldade)
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/v1/controle-receitas/categoria', cors(), bodyParserJSON, async function (request, response){
+
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe do body da requisição os dados encaminhados
+    let dadosBody = request.body
+    let resultCategoria = await controllerCategoria.inserirCategoria(dadosBody, contentType)
+
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
+})
+
+app.get('/v1/controle-receitas/categoria', cors(), async function(request, response) {
+    
+    let resultCategoria = await controllerCategoria.listarCategoria()
+
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
+})
+
+app.get('/v1/controle-receitas/categoria/:id', cors(), async function(request, response) {
+    
+    let idCategoria = request.params.id
+
+    let resultCategoria = await controllerCategoria.buscarCategoria(idCategoria)
+
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
+})
+
+app.delete('/v1/controle-receitas/categoria/:id', cors(), async function (request, response) {
+    
+    let idCategoria =  request.params.id
+
+    let resultCategoria = await controllerCategoria.excluirCategoria(idCategoria)
+
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
+})
+
+app.put('/v1/controle-receitas/categoria/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let contentType = request.headers['content-type']
+
+    let idCategoria =  request.params.id
+
+    //recebe os dados da requisição pelo body
+    let dadosBody = request.body
+
+    let resultCategoria = await controllerCategoria.atualizarCategoria(idCategoria, dadosBody, contentType)
+
+    response.status(resultCategoria.status_code)
+    response.json(resultCategoria)
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/v1/controle-receitas/receita', cors(), bodyParserJSON, async function (request, response){
+
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe do body da requisição os dados encaminhados
+    let dadosBody = request.body
+    let resultReceita = await controllerReceita.inserirReceita(dadosBody, contentType)
+
+    response.status(resultReceita.status_code)
+    response.json(resultReceita)
+})
+
+app.get('/v1/controle-receitas/receita', cors(), async function(request, response) {
+    
+    //chama a função para retornar os receireceitaet 
+    resultReceita = await controllerReceita.listarReceita()
+
+    response.status(resultReceita.status_code)
+    response.json(resultReceita)
+
+})
+
+app.get('/v1/controle-receitas/receita/:id', cors(), async function(request, response) {
+    
+    let idReceita = request.params.id
+
+    let resultReceita = await controllerReceita.buscarReceita(idReceita)
+
+    response.status(resultReceita.status_code)
+    response.json(resultReceita)
+
+})
+
+app.delete('/v1/controle-receitas/receita/:id', cors(), async function (request, response) {
+    
+    let idReceita =  request.params.id
+
+    let resultReceita = await controllerReceita.excluirReceita(idReceita)
+
+    response.status(resultReceita.status_code)
+    response.json(resultReceita)
+
+    // no teste deste endpoint o filme 3 foi deletado!!!!
+
+})
+
+app.put('/v1/controle-receitas/receita/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da requisição
+    let idReceita =  request.params.id
+
+    //recebe os dados da requisição pelo body
+    let dadosBody = request.body
+
+    let resultReceita = await controllerReceita.atualizarReceita(idReceita, dadosBody, contentType)
+
+    response.status(resultReceita.status_code)
+    response.json(resultReceita)
+
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.listen('8080', function(){
     console.log('API funcionando e aguardadndo requisições')

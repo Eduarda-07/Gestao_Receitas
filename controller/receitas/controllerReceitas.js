@@ -10,9 +10,12 @@ const message = require('../../modulo/config')
 
 //import do arquivo DAO para realizar os comando no banco
 const receitaDAO = require("../../model/DAO/receitas")
+const receitaCategoriaDAO  = require('../../model/DAO/receitaCategoria')
 
 const controllerUsuario  = require('../usuarios/controllerUsuarios')
 const controllerNivelDificuldade  = require('../dificuldade/controllerNivelDificuldade')
+const controllerReceitaCategoria  = require('./controllerReceitaCategoria')
+
 
 
 // inserir receita no banco
@@ -24,16 +27,16 @@ const inserirReceita = async function(receita, contentType){
             if(  
                  receita.titulo               == ""  || receita.titulo               == undefined  || receita.titulo               == null  || receita.titulo.length     > 70   ||
                  receita.descricao            == ""  || receita.descricao            == undefined  || receita.descricao            == null  || receita.descricao.length  > 100  ||
-                 receita.modo_preparo         == ""  || receita.modo_preparo         == undefined  || receita.modo_preparo         == null  || 
-                 receita.imagem_receita       == ""  || receita.imagem_receita       == undefined  || receita.imagem_receita       == null  || receita.descricao.length  > 255  ||
+                 receita.modo_de_preparo      == ""  || receita.modo_de_preparo         == undefined  || receita.modo_de_preparo         == null  || 
+                 receita.imagem_receita       == ""  || receita.imagem_receita       == undefined  || receita.imagem_receita       == null  || receita.imagem_receita.length  > 255  ||
                  receita.ingredientes         == ""  || receita.ingredientes         == undefined  || receita.ingredientes         == null  || 
-                 receita.tempo_preparo        == ""  || receita.tempo_preparo        == undefined  || receita.tempo_preparo        == null  || receita.descricao.length  > 20  ||
-                 receita.porcoes              == ""  || receita.porcoes              == undefined  || receita.porcoes              == null  || receita.descricao.length  > 20  ||
-                 receita.id_usuarios          == ""  || receita.id_usuarios          == undefined  || receita.id_usuarios          == null  ||
-                 receita.id_nivel_dificuldade == ""  || receita.id_nivel_dificuldade == undefined  || receita.id_nivel_dificuldade == null  
+                 receita.tempo_preparo        == ""  || receita.tempo_preparo        == undefined  || receita.tempo_preparo        == null  || receita.tempo_preparo.length  > 20  ||
+                 receita.porcoes              == ""  || receita.porcoes              == undefined  || receita.porcoes              == null  || receita.porcoes.length  > 20  ||
+                 receita.id_usuarios          == ""  || receita.id_usuarios          == undefined  || receita.id_usuarios          == null  || isNaN(receita.id_usuarios)       || receita.id_usuarios <= 0   ||
+                 receita.id_nivel_dificuldade == ""  || receita.id_nivel_dificuldade == undefined  || receita.id_nivel_dificuldade == null  || isNaN(receita.id_nivel_dificuldade)   || receita.id_nivel_dificuldade <= 0  
                  
             ){
-
+                console.log('Validação falhou! Motivos:NAO SEIIII');
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos
                 
             }else {
@@ -55,7 +58,7 @@ const inserirReceita = async function(receita, contentType){
                                 id_receita: idReceita,
                                 id_categoria: categoria.id
                             }
-                            await receitaDAO.insertReceita(receitaCategoria);
+                            await receitaCategoriaDAO.insertReceitaCategoria(receitaCategoria);
                         }
                     }
                 }
@@ -84,13 +87,13 @@ const atualizarReceita = async function(id, receita, contentType){
                 id                           == ""  || id                           == undefined  || id                           == null  || isNaN(id) || id <= 0         || 
                 receita.titulo               == ""  || receita.titulo               == undefined  || receita.titulo               == null  || receita.titulo.length     > 70   ||
                 receita.descricao            == ""  || receita.descricao            == undefined  || receita.descricao            == null  || receita.descricao.length  > 100  ||
-                receita.modo_preparo         == ""  || receita.modo_preparo         == undefined  || receita.modo_preparo         == null  || 
-                receita.imagem_receita       == ""  || receita.imagem_receita       == undefined  || receita.imagem_receita       == null  || receita.descricao.length  > 255  ||
+                receita.modo_de_preparo         == ""  || receita.modo_de_preparo         == undefined  || receita.modo_de_preparo         == null  || 
+                receita.imagem_receita       == ""  || receita.imagem_receita       == undefined  || receita.imagem_receita       == null  || receita.imagem_receita.length  > 255  ||
                 receita.ingredientes         == ""  || receita.ingredientes         == undefined  || receita.ingredientes         == null  || 
-                receita.tempo_preparo        == ""  || receita.tempo_preparo        == undefined  || receita.tempo_preparo        == null  || receita.descricao.length  > 20  ||
-                receita.porcoes              == ""  || receita.porcoes              == undefined  || receita.porcoes              == null  || receita.descricao.length  > 20  ||
-                receita.id_usuarios          == ""  || receita.id_usuarios          == undefined  || receita.id_usuarios          == null  ||
-                receita.id_nivel_dificuldade == ""  || receita.id_nivel_dificuldade == undefined  || receita.id_nivel_dificuldade == null  
+                receita.tempo_preparo        == ""  || receita.tempo_preparo        == undefined  || receita.tempo_preparo        == null  || receita.tempo_preparo.length  > 20  ||
+                receita.porcoes              == ""  || receita.porcoes              == undefined  || receita.porcoes              == null  || receita.porcoes.length  > 20  ||
+                receita.id_usuarios          == ""  || receita.id_usuarios          == undefined  || receita.id_usuarios          == null  || isNaN(receita.id_usuarios) || receita.id_usuarios <= 0 ||
+                receita.id_nivel_dificuldade == ""  || receita.id_nivel_dificuldade == undefined  || receita.id_nivel_dificuldade == null  || isNaN(receita.id_nivel_dificuldade) || receita.id_nivel_dificuldade <= 0
             ) {
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos 
                
@@ -138,7 +141,7 @@ const excluirReceita = async function(id){
         } else {
 
             //função para verificar se o id existe no banco de dados
-            let result = await receitaDAO.selecByIdUsuario(parseInt(id))
+            let result = await receitaDAO.selecByIdReceita(parseInt(id))
 
             if(result != false || typeof(result) == 'object'){
 
@@ -168,6 +171,8 @@ const excluirReceita = async function(id){
             }
         }
     } catch (error) {
+        console.log(error);
+        
         return message.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
@@ -176,7 +181,7 @@ const excluirReceita = async function(id){
 const listarReceita = async function(){
     try {
 
-        let arrayReceita = {}
+        let arrayReceita = []
         let dadosReceita = {}
 
         //chama a função para retornar as receitas cadastradas
@@ -193,22 +198,23 @@ const listarReceita = async function(){
                 for(const itemReceita of resultReceita){
                     
                     let dadosUsuario = await controllerUsuario.buscarUsuario(itemReceita.id_usuarios)
-                    itemReceita.usuario = dadosUsuario.nome
-                    delete itemReceita.id_usuario
+                    itemReceita.usuario = dadosUsuario.user
+                    delete itemReceita.id_usuarios
                         
                     let dadosDificuldade = await controllerNivelDificuldade.buscarNivelDificuldade(itemReceita.id_nivel_dificuldade)
                     //Adiciona um atributo de nivel dificuldade no JSON de receita e coloca os dados do nivel 
-                    itemReceita.dificuldade = dadosDificuldade.dificuldade
+                    itemReceita.dificuldade = dadosDificuldade.nivel
                     //Remover o id do JSON
                     delete itemReceita.id_nivel_dificuldade
 
                     
                     // fazendo interação com a tbl_receita_categoria
                     let dadosCategoria = await controllerReceitaCategoria.buscarCategoriaPorReceita(itemReceita.id)
-
+            
                     // verificando se retorna array e se não é false
-                    if (dadosCategoria && Array.isArray(dadosCategoria.categoria)) {
-                        itemReceita.categoria = dadosCategoria.categoria
+                    if (dadosCategoria && Array.isArray(dadosCategoria.receitaCategoria)) {
+                      
+                        itemReceita.categoria = dadosCategoria.receitaCategoria
                     } else {
                         //se for false retorna um array vazio 
                         itemReceita.categoria = []
@@ -245,7 +251,7 @@ try {
 
     } else {
 
-        let arrayReceita = {}
+        let arrayReceita = []
         let dadosReceita = {}
 
         let resultReceita= await receitaDAO.selecByIdReceita(parseInt(id))
@@ -258,24 +264,26 @@ try {
                 dadosReceita.status_code = 200
 
                 for(const itemReceita of resultReceita){
-                    
+
                     let dadosUsuario = await controllerUsuario.buscarUsuario(itemReceita.id_usuarios)
-                    itemReceita.usuario = dadosUsuario.nome
-                    delete itemReceita.id_usuario
+                    itemReceita.usuario = dadosUsuario.user
+                    delete itemReceita.id_usuarios
                         
                     let dadosDificuldade = await controllerNivelDificuldade.buscarNivelDificuldade(itemReceita.id_nivel_dificuldade)
                     //Adiciona um atributo de nivel dificuldade no JSON de receita e coloca os dados do nivel 
-                    itemReceita.dificuldade = dadosDificuldade.dificuldade
+                    itemReceita.dificuldade = dadosDificuldade.nivel
                     //Remover o id do JSON
                     delete itemReceita.id_nivel_dificuldade
 
                     
                     // fazendo interação com a tbl_receita_categoria
                     let dadosCategoria = await controllerReceitaCategoria.buscarCategoriaPorReceita(itemReceita.id)
-
+                    
                     // verificando se retorna array e se não é false
-                    if (dadosCategoria && Array.isArray(dadosCategoria.categoria)) {
-                        itemReceita.categoria = dadosCategoria.categoria
+                    if (dadosCategoria && Array.isArray(dadosCategoria.receitaCategoria)) {
+                      
+                        
+                        itemReceita.categoria = dadosCategoria.receitaCategoria
                     } else {
                         //se for false retorna um array vazio 
                         itemReceita.categoria = []
