@@ -8,61 +8,65 @@
 // import das mensagens e status code
 const message = require('../../modulo/config');
 
-// import do DAO de login para buscar o usuário via e-mail
-const loginDAO = require('../../model/DAO/login');
-
 // import do DAO de usuários para atualizar a senha
 const novaSenhaDAO = require('../../model/DAO/novaSenha');
+
+const loginDAO = require("../../model/DAO/login")
 
 // import do bcrypt para comparar hashes e gerar hash de nova senha
 const bcrypt = require('bcrypt');
 
-const recuperarSenha = async function (id, dados, contentType) {
+const recuperarSenha = async function (dados, contentType) {
   try {
-    if (String(contentType).toLowerCase() !== 'application/json') {
-      return message.ERROR_CONTENT_TYPE;
-    }
-
-    if (
-        id                   == ""  ||  id                   == undefined  || id                   == null  || isNaN(id) || id      <= 0  || 
+    if (String(contentType).toLowerCase() == 'application/json') {
+      if (
        dados.email           == ""  ||  dados.email          == undefined  || dados.email          == null  ||  dados.email.length  >100  ||
        dados.palavra_chave   == ""  ||  dados.palavra_chave  == undefined  || dados.palavra_chave  == null  ||
        dados.nova_senha      == ""  ||  dados.nova_senha     == undefined  || dados.nova_senha     == null  
     ) {
       return message.ERROR_REQUIRED_FIELD;
     }else{
-        let dadosUsuarioLogado = {}
 
-        let resultEmailPalavra = await novaSenhaDAO.selectEmailPalavra(usuario.email, usuario.palavra_chave)
+      let resultEmail = await loginDAO.selectEmailUsuario(dados.email)
 
-        if(resultEmail!= false || typeof(resultEmail) == 'object'){
+      if(resultEmail!= false || typeof(resultEmail) == 'object'){
+        // console.log(resultEmail);
+          
+         if(resultEmail.length > 0){
 
-            if(resultEmailPalavra.length > 0){
+          let usuario = resultEmail[0]
 
-                //pegar o primeiro resultado
-                let usuarioUnico = resultEmailPalavra[0]
-                console.log(usuarioUnico)
+          let chaveCorreta = await bcrypt.compare(dados.palavra_chave, usuario.palavra_chave)
+          if (!chaveCorreta) {
+              return message.ERROR_NOT_FOUND
+          }else{
 
-                // //comparando se a senha digitada esta certa
-                // let conferindoSenha = await bcrypt.compare(usuario.senha, usuarioUnico.senha)
-                // console.log(conferindoSenha)
-                // if (conferindoSenha){
-                //     dadosUsuarioLogado.status = true
-                //     dadosUsuarioLogado.status_code = 200
-                //     dadosUsuarioLogado.user = {
-                //         id: usuarioUnico.id,
-                //         nome: usuarioUnico.nome,
-                //         email: usuarioUnico.email,
-                //         foto_perfil: usuarioUnico.foto_perfil || null 
-                //     }
-                // }
+            // Atualiza a senha do usuário no banco de dados
+            let novaSenha = await bcrypt.hash(dados.nova_senha, 10)
 
-                let atualizarSenha = await novaSenhaDAO.updateSenhaUsuarioById(id, usuario.senha)
-                return dadosUsuarioLogado
+            let atualizacao = await novaSenhaDAO.updateSenhaUsuario(usuario.id, novaSenha)
+               
+            if (atualizacao) {        
+              return message.SUCCESS_UPDATED_ITEM
+            }else {
+              // Caso a atualização no banco de dados falhe
+              return message.ERROR_INTERNAL_SERVER_MODEL
             }
-         }
+          }
+        } else {
+            // Usuário não encontrado com o email e palavra-chave fornecidos
+            return message.ERROR_NOT_FOUND; 
+          }
+      }else{
+        return message.ERROR_NOT_FOUND
+      }
+        // return message.ERROR_CONTENT_TYPE
+      }
+    }else{
+      return message.ERROR_CONTENT_TYPE;
     }
 
+    
   } catch (error) {
     console.log(error);
     return message.ERROR_INTERNAL_SERVER_CONTROLLER;

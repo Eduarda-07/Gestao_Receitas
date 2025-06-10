@@ -57,6 +57,7 @@ const controllerLogin = require('./controller/login/controllerLogin')
 const controllerNivelDificuldade = require('./controller/dificuldade/controllerNivelDificuldade')
 const controllerCategoria = require('./controller/categoria/controllerCategoria')
 const controllerReceita = require('./controller/receitas/controllerReceitas')
+const controllerRecuperarSenha = require('./controller/nova senha/controllerNovaSenha')
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -320,6 +321,21 @@ app.put('/v1/controle-receitas/receita/:id', cors(), bodyParserJSON, async funct
     response.json(resultReceita)
 
 })
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/v1/controle-receitas/usuario/recuperar-senha', cors(), bodyParserJSON, async function (request, response) {
+
+    let dadosRecuperacao = request.body
+    let contentType      = request.headers['content-type']
+
+
+    let resultRecuperacao = await controllerRecuperarSenha.recuperarSenha(dadosRecuperacao, contentType)
+    
+    response.status(resultRecuperacao.status_code)
+    response.json(resultRecuperacao)
+  }
+)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

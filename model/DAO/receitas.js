@@ -63,7 +63,7 @@ const updateReceita = async function(receita){
         let sql = `update tbl_receita set   titulo                = '${receita.titulo}', 
                                             descricao             = '${receita.descricao}', 
                                             modo_de_preparo       = '${receita.modo_de_preparo}', 
-                                            imagem_receitas       = '${receita.imagem_receita}', 
+                                            imagem_receita        = '${receita.imagem_receita}', 
                                             ingredientes          = '${receita.ingredientes}',
                                             tempo_preparo         = '${receita.tempo_preparo}',
                                             porcoes               = '${receita.porcoes}',
@@ -81,7 +81,7 @@ const updateReceita = async function(receita){
         }
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         
         return false
     }
