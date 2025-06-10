@@ -40,6 +40,7 @@ const inserirReceita = async function(receita, contentType){
                 return message.ERROR_REQUIRED_FIELD //400 - dados nao preencidos
                 
             }else {
+                let receitaJason = {}
                 let result= await receitaDAO.insertReceita(receita)
 
                 //verificando se tem algum campo chamado "categoria" para ser add e se esse campo retorna um array
@@ -153,6 +154,15 @@ const excluirReceita = async function(id){
                     
                     if (deleteCategoria) {
                          //delete
+                        let resultReceita = await receitaDAO.deleteReceita(parseInt(id))
+
+
+                        if (resultReceita) {
+                            return message.SUCCESS_DELETED_ITEM //200
+                        } else {
+                            return message.ERROR_INTERNAL_SERVER_MODEL 
+                        }
+                    }else{
                         let resultReceita = await receitaDAO.deleteReceita(parseInt(id))
 
 

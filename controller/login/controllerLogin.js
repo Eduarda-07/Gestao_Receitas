@@ -36,7 +36,7 @@ const loginUsuario = async function(usuario) {
             if(resultEmail.length > 0){
 
                 let usuarioUnico = resultEmail[0]
-                console.log(usuarioUnico)
+                // console.log(usuarioUnico)
 
                 //comparando se a senha digitada esta certa
                 let conferindoSenha = await bcrypt.compare(usuario.senha, usuarioUnico.senha)

@@ -20,7 +20,7 @@ const inserirCategoria = async function(categoria, contentType){
         //contentType é quem chega o body, especificando que deve ser json
         if(String(contentType).toLowerCase() == 'application/json'){
             if ( 
-                categoria.categoria   == '' ||   categoria.categoria   == undefined || categoria.categoria  == null || categoria.categoria.length   >  10 
+                categoria.categoria   == '' ||   categoria.categoria   == undefined || categoria.categoria  == null || categoria.categoria.length   >  80 
                )
        
            {

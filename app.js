@@ -339,6 +339,24 @@ app.post('/v1/controle-receitas/usuario/recuperar-senha', cors(), bodyParserJSON
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+app.get('/v1/controle-receitas/filtros/:palavra', cors(), async function(request,response){
+    let palavra = request.params.palavra
+
+    let dados = contatos.getMensagem(tel)
+
+    // resposta da api com json e o status code
+    if(dados){
+        response.status(200)
+        response.json(dados)
+    }else{
+        response.status(404)
+        response.json({'status': 404, 'message': 'Não foi possível encontrar nenhum dado'})
+    }
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 app.listen('8080', function(){
     console.log('API funcionando e aguardadndo requisições')
 })
