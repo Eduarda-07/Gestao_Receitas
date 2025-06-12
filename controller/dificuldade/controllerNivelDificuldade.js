@@ -154,7 +154,7 @@ const listarNivelDificuldade = async function(){
                     //criando um JSON de retorno de dados para API
                     dadosDificuldade.status = true
                     dadosDificuldade.status_code = 200
-                    dadosDificuldade.items = resultDifuculdade.length
+                    dadosDificuldade.itens = resultDifuculdade.length
                     dadosDificuldade.nivel = resultDifuculdade
 
                     return dadosDificuldade

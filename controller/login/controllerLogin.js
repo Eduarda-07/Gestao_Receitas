@@ -44,7 +44,7 @@ const loginUsuario = async function(usuario) {
                 if (conferindoSenha){
                     dadosUsuarioLogado.status = true
                     dadosUsuarioLogado.status_code = 200
-                    dadosUsuarioLogado.user = {
+                    dadosUsuarioLogado.usuario = {
                         id: usuarioUnico.id,
                         nome: usuarioUnico.nome,
                         email: usuarioUnico.email,

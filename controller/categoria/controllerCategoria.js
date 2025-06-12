@@ -154,7 +154,7 @@ const listarCategoria = async function(){
                     //criando um JSON de retorno de dados para API
                  dadosCategoria.status = true
                  dadosCategoria.status_code = 200
-                 dadosCategoria.items = resultCategoria.length
+                 dadosCategoria.itens = resultCategoria.length
                  dadosCategoria.categorias = resultCategoria
 
                     return dadosCategoria

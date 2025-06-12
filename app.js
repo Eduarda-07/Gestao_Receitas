@@ -339,14 +339,17 @@ app.post('/v1/controle-receitas/usuario/recuperar-senha', cors(), bodyParserJSON
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get('/v1/controle-receitas/filtros/', cors(), async function(request,response){
+app.get('/v1/controle-receitas/filtros/id/', cors(), async function(request,response){
 
-    const categoria = request.query.categoria ? parseInt(request.query.categoria) : null;
-    const dificuldade = request.query.dificuldade ? parseInt(request.query.dificuldade) : null;
+    // pegua o parametro passado pela query 
+    //se existir transforma em numero, se não existir transforma em null
+    const categoria = request.query.categoria ? parseInt(request.query.categoria) : null
+    const dificuldade = request.query.dificuldade ? parseInt(request.query.dificuldade) : null
 
-    const resultado = await controllerReceita.buscarReceitabyFiltros(categoria, dificuldade);
+    const result = await controllerReceita.buscarReceitabyFiltros(categoria, dificuldade)
 
-    response.status(resultado.status_code || 500).json(resultado);
+    response.status(result.status_code)
+    response.json(result)
 
 })
 

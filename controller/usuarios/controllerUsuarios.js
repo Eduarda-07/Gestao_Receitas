@@ -217,8 +217,8 @@ const listarUsuario = async function(){
                 //criando um JSON de retorno de dados para API
                 dadosUsuario.status = true
                 dadosUsuario.status_code = 200
-                dadosUsuario.items = resultUsuarios.length
-                dadosUsuario.users = resultUsuarios
+                dadosUsuario.itens = resultUsuarios.length
+                dadosUsuario.usuarios = resultUsuarios
 
                 return dadosUsuario
 
@@ -254,7 +254,7 @@ try {
 
                 dadosUsuario.status = true
                 dadosUsuario.status_code = 200
-                dadosUsuario.user = resultUsuario
+                dadosUsuario.usuario = resultUsuario
 
                 return dadosUsuario
             }else{

@@ -204,7 +204,7 @@ const listarReceita = async function(){
                 //criando um JSON de retorno de dados para API
                 dadosReceita.status = true
                 dadosReceita.status_code = 200
-                dadosReceita.items = resultReceita.length
+                dadosReceita.itens = resultReceita.length
 
                 for(const itemReceita of resultReceita){
                     
@@ -346,6 +346,7 @@ const buscarReceitabyFiltros = async function(id_categoria, id_dificuldade){
     
                     dadosReceita.status = true
                     dadosReceita.status_code = 200
+                    dadosReceita.itens = resultReceita.length
     
                     for(const itemReceita of resultReceita){
     

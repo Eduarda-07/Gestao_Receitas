@@ -130,7 +130,7 @@ const listarReceitaCategoria = async function(){
                 //Criando um JSON de retorno de dados para a API
                 dadosReceitaCategoria.status = true
                 dadosReceitaCategoria.status_code = 200
-                dadosReceitaCategoria.items = resultReceitaCategoria.length
+                dadosReceitaCategoria.itens = resultReceitaCategoria.length
                 dadosReceitaCategoria.receitaCategoria = resultReceitaCategoria
 
                 return dadosReceitaCategoria
