@@ -121,6 +121,7 @@ const selecByIdNivelDificuldade = async function(id){
 
 }
 
+
 module.exports = {
     insertNivelDificuldade,
     updateNivelDificuldade,

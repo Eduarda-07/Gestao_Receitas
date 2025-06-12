@@ -11,6 +11,7 @@ const message = require('../../modulo/config')
 //import do arquivo DAO para realizar os comando no banco
 const receitaDAO = require("../../model/DAO/receitas")
 const receitaCategoriaDAO  = require('../../model/DAO/receitaCategoria')
+const filtroDAO  = require('../../model/DAO/filtros')
 
 const controllerUsuario  = require('../usuarios/controllerUsuarios')
 const controllerNivelDificuldade  = require('../dificuldade/controllerNivelDificuldade')
@@ -318,11 +319,78 @@ try {
 }
 }
 
+// função para tratar o retorno de uma receita pelos filtrandos 
+const buscarReceitabyFiltros = async function(id_categoria, id_dificuldade){
+
+    try {
+        
+    
+        if ( 
+            (id_categoria == null && id_categoria == undefined && (isNaN(id_categoria) || id_categoria <= 0)) &&
+            (id_dificuldade == null && id_dificuldade == undefined && (isNaN(id_dificuldade) || id_dificuldade <= 0))
+            ) {
+            
+            return message.ERROR_REQUIRED_FIELD //400
+    
+        } else {
+    
+            let arrayReceita = []
+            let dadosReceita = {}
+
+            let resultReceita= await filtroDAO.selectReceitaFiltro(parseInt(id_categoria), parseInt(id_dificuldade))
+            
+    
+            if(resultReceita!= false || typeof(resultReceita) == 'object'){
+    
+                if(resultReceita.length > 0){
+    
+                    dadosReceita.status = true
+                    dadosReceita.status_code = 200
+    
+                    for(const itemReceita of resultReceita){
+    
+                        let dadosUsuario = await controllerUsuario.buscarUsuario(itemReceita.id_usuarios)
+                        itemReceita.usuario = dadosUsuario.user
+                        delete itemReceita.id_usuarios
+                            
+                        let dadosDificuldade = await controllerNivelDificuldade.buscarNivelDificuldade(itemReceita.id_nivel_dificuldade)
+                        itemReceita.dificuldade = dadosDificuldade.nivel
+                        delete itemReceita.id_nivel_dificuldade
+    
+                        let dadosCategoria = await controllerReceitaCategoria.buscarCategoriaPorReceita(itemReceita.id)
+                        if (dadosCategoria && Array.isArray(dadosCategoria.receitaCategoria)) {
+                            itemReceita.categoria = dadosCategoria.receitaCategoria
+                        } else {
+                            itemReceita.categoria = []
+                        }
+    
+                        arrayReceita.push(itemReceita)
+     
+                    }
+                    dadosReceita.receita = arrayReceita
+    
+                    return dadosReceita
+                }else{
+                    return message.ERROR_NOT_FOUND //404
+                }
+          
+            }else{
+                return message.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+    }
+
+
+
 
 module.exports = {
     inserirReceita,
     atualizarReceita,
     excluirReceita,
     listarReceita,
-    buscarReceita
+    buscarReceita,
+    buscarReceitabyFiltros
 }

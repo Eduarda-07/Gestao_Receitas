@@ -339,19 +339,15 @@ app.post('/v1/controle-receitas/usuario/recuperar-senha', cors(), bodyParserJSON
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get('/v1/controle-receitas/filtros/:palavra', cors(), async function(request,response){
-    let palavra = request.params.palavra
+app.get('/v1/controle-receitas/filtros/', cors(), async function(request,response){
 
-    let dados = contatos.getMensagem(tel)
+    const categoria = request.query.categoria ? parseInt(request.query.categoria) : null;
+    const dificuldade = request.query.dificuldade ? parseInt(request.query.dificuldade) : null;
 
-    // resposta da api com json e o status code
-    if(dados){
-        response.status(200)
-        response.json(dados)
-    }else{
-        response.status(404)
-        response.json({'status': 404, 'message': 'Não foi possível encontrar nenhum dado'})
-    }
+    const resultado = await controllerReceita.buscarReceitabyFiltros(categoria, dificuldade);
+
+    response.status(resultado.status_code || 500).json(resultado);
+
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
