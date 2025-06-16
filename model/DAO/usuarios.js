@@ -30,8 +30,19 @@ const insertUsuario = async function (usuario){
           // await só funciona com o "async", serve para fazer uma pausa no terminal para aguardar a conexão com o banco de dados
           let result = await prisma.$executeRawUnsafe(sql)
 
-          if (result) {
-            return result
+         if (result === 1) { 
+            let lastIdResult = await prisma.$queryRawUnsafe(`SELECT LAST_INSERT_ID() AS id`)
+
+
+            let idGerado = lastIdResult[0].id
+
+            return {
+                id: Number(idGerado), 
+                nome: usuario.nome,
+                email: usuario.email,
+                senha: usuario.senha,
+                palavra_chave: usuario.palavra_chave
+            }
           } else {
             return false
           }

@@ -56,42 +56,20 @@ const inserirUsuario = async function(usuario, contentType){
                 
                 usuario.palavra_chave = hashedPalavra
 
-                let dadosUsuario = {}
-
-                let result= await usuariosDAO.insertUsuario(usuario)
-
-                if(result!= false || typeof(result) == 'object'){
-                    if(result.length > 0){
-        
-                        //criando um JSON de retorno de dados para API
-                        dadosUsuario.status = true
-                        dadosUsuario.status_code = 200
-                        dadosUsuario.items = resultUsuarios.length
-                        dadosUsuario.users = resultUsuarios
-        
-                        return dadosUsuario
-            //     dadosUsuario.status = true
-            //     dadosUsuario.status_code = 200
-            //     dadosUsuario.items = resultUsuarios.length
-            //     dadosUsuario.users = resultUsuarios
-
-            //     return dadosUsuario
-
-   
-            //    if (result) {
-            //     return message.SUCCESS_CREATED_ITEM //201 - item criado
-                   
-            //    }else{
-            //        return message.ERROR_INTERNAL_SERVER_MODEL //500
-            //     }
-
-         }
-        }
-
+                let resultInsert = await usuariosDAO.insertUsuario(usuario) 
+                if (resultInsert) {
+                let dadosUsuario = {
+                    status: true,
+                    status_code: message.SUCCESS_CREATED_ITEM.status_code, 
+                    message: message.SUCCESS_CREATED_ITEM.message,       
+                    usuario: resultInsert                                
+                }
+                return dadosUsuario
+            } else {
+                return message.ERROR_INTERNAL_SERVER_MODEL // Retorna 500 - Erro no modelo/DAO
             }
-        } else {
-            return message.ERROR_CONTENT_TYPE //500
-        }
+        }       
+    }
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER_CONTROLLER //415
     }
