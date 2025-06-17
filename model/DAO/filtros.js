@@ -32,26 +32,26 @@ const selectReceitaFiltro = async function(categoria, dificuldade){
         if (categoria) {
             // adiciona a continuação da sintase mySQL para categoria
             // ? é o valor que do id mandado que foi inserido na lista de params
-            where.push(`tbl_categorias.id = ?`);
-            params.push(Number(categoria));
+            where.push(`tbl_categorias.id = ?`)
+            params.push(Number(categoria))
         }
            
         // Adiciona a condição de dificuldade se ela for verdadeira
         if (dificuldade) {
             // adiciona a continuação da sintase mySQL para dificuldade
             // ? é o valor que do id mandado que foi inserido na lista de params
-            where.push(`tbl_receita.id_nivel_dificuldade = ?`);
-            params.push(Number(dificuldade));
+            where.push(`tbl_receita.id_nivel_dificuldade = ?`)
+            params.push(Number(dificuldade))
         }
                
         if (where.length > 0) {
             sqlBase += ` WHERE ` + where.join(' or ')
         }
 
-        sqlBase += ` ORDER BY tbl_receita.id DESC`;
+        sqlBase += ` ORDER BY tbl_receita.id DESC`
       
         // ...params é o prisma o valor da lista para ? 
-        const result = await prisma.$queryRawUnsafe(sqlBase, ...params);
+        let result = await prisma.$queryRawUnsafe(sqlBase, ...params)
 
     
 
@@ -62,51 +62,38 @@ const selectReceitaFiltro = async function(categoria, dificuldade){
         }
         
     }catch(error){
-        console.log(error);
+        console.log(error)
         return false
     }
 }
 
-const selectReceitaPalavra = async function(){
+const selectReceitaPalavra = async function(porcoes, tempo_preparo){
     try{
         let sqlBase = `
-                   SELECT tbl_receita.*, tbl_categorias.categoria, tbl_nivel_dificuldade.dificuldade   
-                   FROM tbl_receita 
-                   INNER JOIN tbl_receita_categoria  
-                   ON  tbl_receita.id = tbl_receita_categoria.id_receita 
-                   INNER JOIN tbl_categorias
-                   ON tbl_receita_categoria.id_categoria = tbl_categorias.id
-                   INNER JOIN tbl_nivel_dificuldade 
-                   ON tbl_receita.id_nivel_dificuldade = tbl_nivel_dificuldade.id
+                   SELECT * FROM tbl_receita 
                    `
 
         let params = []
         let where = []
            
-         // Adiciona a condição de categoria se ela for verdadeira
-        if (categoria) {
-            // adiciona a continuação da sintase mySQL para categoria
-            // ? é o valor que do id mandado que foi inserido na lista de params
-            where.push(`tbl_categorias.id = ?`);
-            params.push(Number(categoria));
+        if (porcoes) {
+           where.push(`porcoes LIKE ?`);
+            params.push(`%${porcoes}%`); 
         }
            
-        // Adiciona a condição de dificuldade se ela for verdadeira
-        if (dificuldade) {
-            // adiciona a continuação da sintase mySQL para dificuldade
-            // ? é o valor que do id mandado que foi inserido na lista de params
-            where.push(`tbl_receita.id_nivel_dificuldade = ?`);
-            params.push(Number(dificuldade));
+        if (tempo_preparo) {
+        
+            where.push(`tempo_preparo LIKE ?`);
+            params.push(`%${tempo_preparo}%`); 
         }
                
         if (where.length > 0) {
             sqlBase += ` WHERE ` + where.join(' or ')
         }
 
-        sqlBase += ` ORDER BY tbl_receita.id DESC`;
+        sqlBase += ` ORDER BY tbl_receita.id DESC`
       
-        // ...params é o prisma o valor da lista para ? 
-        const result = await prisma.$queryRawUnsafe(sqlBase, ...params);
+        let result = await prisma.$queryRawUnsafe(sqlBase, ...params)
 
     
 
@@ -123,6 +110,7 @@ const selectReceitaPalavra = async function(){
 }
 
 module.exports = {
-    selectReceitaFiltro
+    selectReceitaFiltro,
+    selectReceitaPalavra
 }
 

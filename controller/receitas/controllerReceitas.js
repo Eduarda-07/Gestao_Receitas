@@ -76,6 +76,8 @@ const inserirReceita = async function(receita, contentType){
             return message.ERROR_CONTENT_TYPE //500
         }
     } catch (error) {
+        console.log(error);
+        
         return message.ERROR_INTERNAL_SERVER_CONTROLLER //415
     }
 }
