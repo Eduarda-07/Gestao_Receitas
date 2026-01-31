@@ -324,13 +324,13 @@ app.put('/v1/controle-receitas/receita/:id', cors(), bodyParserJSON, async funct
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.post('/v1/controle-receitas/usuario/recuperar-senha', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/controle-receitas/usuario/recuperar-senha/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let dadosRecuperacao = request.body
     let contentType      = request.headers['content-type']
+    let id =  request.params.id
 
-
-    let resultRecuperacao = await controllerRecuperarSenha.recuperarSenha(dadosRecuperacao, contentType)
+    let resultRecuperacao = await controllerRecuperarSenha.recuperarSenha(id, dadosRecuperacao, contentType)
     
     response.status(resultRecuperacao.status_code)
     response.json(resultRecuperacao)

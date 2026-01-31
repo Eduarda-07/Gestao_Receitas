@@ -12,7 +12,7 @@ const{PrismaClient } = require('@prisma/client')
 // instancia (criar um objeto a ser utilizado) a bliblioteca do prisma/client
 const prisma = new PrismaClient()
 
-  const updateSenhaUsuario = async function (id, novaSenhaHash) {
+const updateSenhaUsuario = async function (id, novaSenhaHash) {
     try {
         let sql = `update tbl_usuarios set senha = '${novaSenhaHash}' where id = ${id}`
 

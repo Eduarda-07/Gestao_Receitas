@@ -91,7 +91,7 @@ const atualizarReceita = async function(id, receita, contentType){
                 id                           == ""  || id                           == undefined  || id                           == null  || isNaN(id) || id <= 0         || 
                 receita.titulo               == ""  || receita.titulo               == undefined  || receita.titulo               == null  || receita.titulo.length     > 70   ||
                 receita.descricao            == ""  || receita.descricao            == undefined  || receita.descricao            == null  || receita.descricao.length  > 100  ||
-                receita.modo_de_preparo         == ""  || receita.modo_de_preparo         == undefined  || receita.modo_de_preparo         == null  || 
+                receita.modo_de_preparo      == ""  || receita.modo_de_preparo      == undefined  || receita.modo_de_preparo         == null  || 
                 receita.imagem_receita       == ""  || receita.imagem_receita       == undefined  || receita.imagem_receita       == null  || receita.imagem_receita.length  > 255  ||
                 receita.ingredientes         == ""  || receita.ingredientes         == undefined  || receita.ingredientes         == null  || 
                 receita.tempo_preparo        == ""  || receita.tempo_preparo        == undefined  || receita.tempo_preparo        == null  || receita.tempo_preparo.length  > 20  ||

@@ -16,10 +16,11 @@ const loginDAO = require("../../model/DAO/login")
 // import do bcrypt para comparar hashes e gerar hash de nova senha
 const bcrypt = require('bcrypt');
 
-const recuperarSenha = async function (dados, contentType) {
+const recuperarSenha = async function (id, dados, contentType) {
   try {
     if (String(contentType).toLowerCase() == 'application/json') {
       if (
+       id == "" || id == undefined || id == null || isNaN(id)||
        dados.email           == ""  ||  dados.email          == undefined  || dados.email          == null  ||  dados.email.length  >100  ||
        dados.palavra_chave   == ""  ||  dados.palavra_chave  == undefined  || dados.palavra_chave  == null  ||
        dados.nova_senha      == ""  ||  dados.nova_senha     == undefined  || dados.nova_senha     == null  
@@ -30,7 +31,7 @@ const recuperarSenha = async function (dados, contentType) {
       let resultEmail = await loginDAO.selectEmailUsuario(dados.email)
 
       if(resultEmail!= false || typeof(resultEmail) == 'object'){
-        // console.log(resultEmail);
+        console.log(resultEmail);
           
          if(resultEmail.length > 0){
 
@@ -44,7 +45,7 @@ const recuperarSenha = async function (dados, contentType) {
             // Atualiza a senha do usuário no banco de dados
             let novaSenha = await bcrypt.hash(dados.nova_senha, 10)
 
-            let atualizacao = await novaSenhaDAO.updateSenhaUsuario(usuario.id, novaSenha)
+            let atualizacao = await novaSenhaDAO.updateSenhaUsuario(id, novaSenha)
                
             if (atualizacao) {        
               return message.SUCCESS_UPDATED_ITEM
