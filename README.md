@@ -18,7 +18,7 @@
 ---
 
 <a name="visao-geral"></a>
-## 🔗 Visão Geral
+## Visão Geral
 
 Esta API tem como objetivo realizar o **gerenciamento de receitas em um site**, permitindo que usuários cadastrados cadastrem suas receitas e vejam as receitas já cadastradas por outros usuários.
 
