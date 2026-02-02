@@ -577,7 +577,7 @@ Observação: é possível fazer os dois filtros ao mesmo tempo com a mesma url
 
 ---
 
-<a name="difiduldade"></a>
+<a name="dificuldade"></a>
 ## Nível de dificuldade
 
 ### Método: `POST`
