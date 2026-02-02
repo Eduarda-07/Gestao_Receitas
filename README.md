@@ -644,7 +644,7 @@ Observação: é possível fazer os dois filtros ao mesmo tempo com a mesma url
 
 ---
 
-### 📤 Exemplo de Retorno (200)
+### Exemplo de Retorno (200)
 ```json
 {
     "status": true,
